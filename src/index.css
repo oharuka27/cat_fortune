@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
+
+:root { font-family: 'Zen Kaku Gothic New', sans-serif; color: #3f3731; background: #f5ead9; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: radial-gradient(circle at 50% 30%, #fffaf0 0, #f6ead8 48%, #edddc7 100%); }
+body::before { content: ''; position: fixed; inset: 0; pointer-events: none; opacity: .24; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.17'/%3E%3C/svg%3E"); }
+button { font: inherit; }
+main { position: relative; overflow: hidden; min-height: 100vh; padding: 54px 24px 28px; text-align: center; }
+.background-word { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); font-family: Georgia, serif; font-size: clamp(76px, 14vw, 180px); letter-spacing: .08em; color: transparent; -webkit-text-stroke: 1px rgba(121,90,57,.06); white-space: nowrap; user-select: none; }
+header { position: relative; }
+.eyebrow { color: #a46f51; font: 600 11px Georgia, serif; letter-spacing: .28em; }
+h1 { margin: 7px 0 2px; font: 700 clamp(40px, 7vw, 66px) 'Shippori Mincho', serif; letter-spacing: .08em; color: #403831; }
+h1 span { color: #a9684b; }
+header p { margin: 5px 0 26px; font-family: 'Shippori Mincho', serif; font-size: 14px; letter-spacing: .08em; color: #776a5f; }
+.fortune-card { position: relative; width: min(860px, 100%); min-height: 370px; margin: 0 auto 22px; border: 1px solid rgba(116,82,53,.28); border-radius: 5px; background: rgba(255,252,244,.72); box-shadow: 0 20px 60px rgba(85,58,34,.1); transition: opacity .25s, transform .25s; }
+.fortune-card::before, .fortune-card::after { content: '✦'; position: absolute; z-index: 2; color: #a67151; background: #f8efdf; font-size: 13px; padding: 0 8px; }
+.fortune-card::before { top: -10px; left: 50%; transform: translateX(-50%); }
+.fortune-card::after { bottom: -10px; left: 50%; transform: translateX(-50%); }
+.fortune-card.shuffling { opacity: .4; transform: scale(.985); }
+.welcome { min-height: 370px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.moon { position: absolute; top: 55px; font-size: 54px; color: #d4b586; opacity: .65; transform: rotate(-18deg); }
+.moon span { font-size: 18px; position: absolute; left: 42px; top: 2px; }
+.cat-silhouette { position: relative; margin-top: 25px; font-size: 100px; filter: grayscale(1) brightness(.5); opacity: .82; transform: scaleX(-1); }
+.welcome h2 { margin: 5px 0; font: 600 25px 'Shippori Mincho', serif; letter-spacing: .08em; }
+.welcome p { margin: 3px 0; color: #87786c; font-size: 13px; }
+.result { min-height: 370px; display: grid; grid-template-columns: 42% 58%; }
+.cat-panel { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid rgba(116,82,53,.18); background: linear-gradient(145deg, color-mix(in srgb, var(--cat-color), transparent 87%), transparent); }
+.cat-emoji { font-size: 112px; line-height: 1; margin-bottom: 15px; filter: drop-shadow(0 12px 12px rgba(73,50,35,.15)); }
+.chosen { color: #a26b50; font-size: 10px; letter-spacing: .2em; }
+.cat-panel h2 { margin: 3px 0 0; font: 700 32px 'Shippori Mincho', serif; letter-spacing: .15em; }
+.cat-panel p { margin: 3px 0; color: #89786a; font: 12px 'Shippori Mincho', serif; }
+.sparkle { position: absolute; color: #c09b66; }.sparkle.one { left: 18%; top: 22%; font-size: 22px; }.sparkle.two { right: 17%; top: 35%; font-size: 30px; }
+.fortune-panel { padding: 35px 42px 28px; text-align: left; display: flex; flex-direction: column; justify-content: center; }
+.fortune-list article { display: flex; gap: 17px; padding: 13px 0; border-bottom: 1px solid rgba(116,82,53,.14); }
+.fortune-list article:last-child { border-bottom: 0; }
+.fortune-icon { flex: 0 0 35px; height: 35px; display: grid; place-items: center; border: 1px solid #b38263; border-radius: 50%; color: #a26649; }
+.fortune-copy { flex: 1; }
+.fortune-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.fortune-heading h3 { margin: 0; font: 600 17px 'Shippori Mincho', serif; letter-spacing: .12em; }
+.stars { color: #bd7653; font-size: 13px; letter-spacing: .1em; white-space: nowrap; }.stars span { color: #d7cbbb; }
+.fortune-copy p { margin: 4px 0 0; color: #776a60; font-size: 12px; }
+blockquote { margin: 18px 0 0; padding: 13px 18px; text-align: center; background: rgba(180,132,93,.08); color: #705b4d; font: 500 13px 'Shippori Mincho', serif; }
+.fortune-button { display: inline-flex; align-items: center; gap: 20px; min-width: 282px; justify-content: center; padding: 14px 27px; border: 0; border-radius: 2px; color: #fffaf0; background: #9b6048; box-shadow: 0 8px 20px rgba(126,73,52,.2); cursor: pointer; font-weight: 700; letter-spacing: .1em; transition: transform .2s, background .2s; }
+.fortune-button:hover { transform: translateY(-2px); background: #874f3a; }.fortune-button:active { transform: translateY(0); }.fortune-button:disabled { cursor: wait; }
+.fortune-button span:last-child { font-size: 23px; font-weight: 400; }
+.note { margin: 10px 0 30px; color: #998a7d; font-size: 10px; letter-spacing: .05em; }
+footer { color: #aa9786; font: 9px Georgia, serif; letter-spacing: .25em; } footer span { color: #b37d5d; margin: 0 12px; }
+@media (max-width: 650px) {
+  main { padding: 36px 14px 22px; }
+  header p { margin-bottom: 18px; }
+  .fortune-card { min-height: 0; }
+  .result { grid-template-columns: 1fr; }
+  .cat-panel { min-height: 260px; border-right: 0; border-bottom: 1px solid rgba(116,82,53,.18); }
+  .cat-emoji { font-size: 86px; }
+  .fortune-panel { padding: 22px 24px; }
+  .welcome { min-height: 350px; }
+}
