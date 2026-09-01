@@ -41,9 +41,9 @@ const score = () => Math.floor(Math.random() * 3) + 3
 
 function makeFortunes(): Fortune[] {
   return [
-    { label: '金運', icon: '◉', score: score(), text: pick(fortuneTexts.money) },
-    { label: '恋愛運', icon: '♥', score: score(), text: pick(fortuneTexts.love) },
-    { label: '健康運', icon: '✚', score: score(), text: pick(fortuneTexts.health) },
+    { label: '金運', icon: '💰', score: score(), text: pick(fortuneTexts.money) },
+    { label: '恋愛運', icon: '💗', score: score(), text: pick(fortuneTexts.love) },
+    { label: '健康運', icon: '🍀', score: score(), text: pick(fortuneTexts.health) },
   ]
 }
 
