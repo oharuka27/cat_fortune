@@ -1,9 +1,15 @@
 import { useState } from 'react'
+import chatoraImage from './assets/cats/chatora.png'
+import kuroImage from './assets/cats/kuro.png'
+import mugigaraImage from './assets/cats/mugigara.png'
+import sabatoraImage from './assets/cats/sabatora.png'
+import shiroImage from './assets/cats/shiro.png'
+import shirokuroImage from './assets/cats/shirokuro.png'
 
 type Cat = {
   name: string
   title: string
-  emoji: string
+  image: string
   color: string
   message: string
 }
@@ -16,12 +22,12 @@ type Fortune = {
 }
 
 const cats: Cat[] = [
-  { name: 'こむぎ', title: '陽だまりの案内猫', emoji: '🐈', color: '#e8aa65', message: 'ゆっくりで大丈夫。今日は心地よい方を選ぶにゃ。' },
-  { name: 'しらたま', title: '月夜のまねき猫', emoji: '🐈‍⬛', color: '#79849a', message: '小さなひらめきが、うれしい出来事を連れてくるにゃ。' },
-  { name: 'あずき', title: 'ご縁を結ぶ猫', emoji: '😺', color: '#b77b67', message: '素直なひと言が、誰かの心をあたためる日だにゃ。' },
-  { name: 'みかん', title: '元気を届ける猫', emoji: '😸', color: '#ed9454', message: 'まずは一歩。軽やかに動くほど運が味方するにゃ！' },
-  { name: 'くろまめ', title: '幸運を見抜く猫', emoji: '🐱', color: '#554f5c', message: 'いつもと違う道に、思いがけない幸運が隠れているにゃ。' },
-  { name: 'さくら', title: '夢みる予言猫', emoji: '😽', color: '#d98d9b', message: '自分をたっぷり褒めると、運気がふわっと花開くにゃ。' },
+  { name: 'むぎがら', title: '陽だまりの案内猫', image: mugigaraImage, color: '#8c603f', message: 'ゆっくりで大丈夫。今日は心地よい方を選ぶにゃ。' },
+  { name: 'しろ', title: '月夜のまねき猫', image: shiroImage, color: '#d8d1ca', message: '小さなひらめきが、うれしい出来事を連れてくるにゃ。' },
+  { name: 'さばとら', title: 'ご縁を結ぶ猫', image: sabatoraImage, color: '#8b8176', message: '素直なひと言が、誰かの心をあたためる日だにゃ。' },
+  { name: 'しろくろ', title: '元気を届ける猫', image: shirokuroImage, color: '#625d5b', message: 'まずは一歩。軽やかに動くほど運が味方するにゃ！' },
+  { name: 'くろ', title: '幸運を見抜く猫', image: kuroImage, color: '#49385c', message: 'いつもと違う道に、思いがけない幸運が隠れているにゃ。' },
+  { name: 'ちゃとら', title: '夢みる予言猫', image: chatoraImage, color: '#d78a45', message: '自分をたっぷり褒めると、運気がふわっと花開くにゃ。' },
 ]
 
 const fortuneTexts = {
@@ -76,7 +82,7 @@ function App() {
           <div className="result">
             <div className="cat-panel" style={{ '--cat-color': cat.color } as React.CSSProperties}>
               <span className="sparkle one">✦</span><span className="sparkle two">✧</span>
-              <div className="cat-emoji">{cat.emoji}</div>
+              <img className="cat-image" src={cat.image} alt={`${cat.name}の横向きの猫`} />
               <span className="chosen">本日の猫さま</span>
               <h2>{cat.name}</h2>
               <p>{cat.title}</p>
