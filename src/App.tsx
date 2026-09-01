@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import chatoraImage from './assets/cats/chatora.png'
 import kuroImage from './assets/cats/kuro.png'
 import mugigaraImage from './assets/cats/mugigara.png'
@@ -51,6 +51,16 @@ function App() {
   const [cat, setCat] = useState<Cat | null>(null)
   const [fortunes, setFortunes] = useState<Fortune[]>([])
   const [isAnimating, setIsAnimating] = useState(false)
+
+  useEffect(() => {
+    cats.forEach(({ image }) => {
+      const preloadImage = new Image()
+      preloadImage.src = image
+      void preloadImage.decode().catch(() => {
+        // decode()非対応時も、srcの指定による先読みは継続されます。
+      })
+    })
+  }, [])
 
   const tellFortune = () => {
     setIsAnimating(true)
