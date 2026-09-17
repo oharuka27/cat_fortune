@@ -39,6 +39,12 @@ const fortuneTexts = {
 const pick = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)]
 const score = () => Math.floor(Math.random() * 3) + 3
 
+function NyaText({ children }: { children: string }) {
+  return children.split(/(にゃ[。！]?)/).map((part, index) =>
+    part.startsWith('にゃ') ? <span className="no-break" key={index}>{part}</span> : part
+  )
+}
+
 function makeFortunes(): Fortune[] {
   return [
     { label: '金運', icon: '💰', score: score(), text: pick(fortuneTexts.money) },
@@ -86,7 +92,7 @@ function App() {
             <div className="moon">☾<span>✦</span></div>
             <div className="cat-silhouette">🐈</div>
             <h2>猫さまが待っています</h2>
-            <p>心を落ち着けて、下のボタンを押してにゃ</p>
+            <p><NyaText>心を落ち着けて、下のボタンを押してにゃ</NyaText></p>
           </div>
         ) : (
           <div className="result">
@@ -109,7 +115,7 @@ function App() {
                   </article>
                 ))}
               </div>
-              <blockquote>「{cat.message}」</blockquote>
+              <blockquote>「<NyaText>{cat.message}</NyaText>」</blockquote>
             </div>
           </div>
         )}
@@ -118,7 +124,7 @@ function App() {
       <button className="fortune-button" onClick={tellFortune} disabled={isAnimating}>
         <span>🐾</span>{cat ? 'もう一度占う' : '今日の運勢を占う'}<span>›</span>
       </button>
-      <p className="note">何度でも占えるにゃ。ただし、猫さまの気分次第。</p>
+      <p className="note"><NyaText>何度でも占えるにゃ。ただし、猫さまの気分次第。</NyaText></p>
       <footer><span>✦</span> MAY THE CATS BE WITH YOU <span>✦</span></footer>
     </main>
   )
