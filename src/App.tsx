@@ -87,7 +87,7 @@ function App() {
         <p>今日のあなたを導く猫さまは、どの子？</p>
       </header>
 
-      <section className={`fortune-card ${isAnimating ? 'shuffling' : ''}`} aria-live="polite">
+      <section className={`fortune-card ${cat ? 'has-result' : ''} ${isAnimating ? 'shuffling' : ''}`} aria-live="polite">
         {!cat ? (
           <div className="welcome">
             <div className="moon">☾<span>✦</span></div>
