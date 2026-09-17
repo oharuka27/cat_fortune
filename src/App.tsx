@@ -71,7 +71,8 @@ function App() {
   const tellFortune = () => {
     setIsAnimating(true)
     window.setTimeout(() => {
-      setCat(pick(cats))
+      const candidates = cat ? cats.filter((candidate) => candidate.name !== cat.name) : cats
+      setCat(pick(candidates))
       setFortunes(makeFortunes())
       setIsAnimating(false)
     }, 450)
