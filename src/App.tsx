@@ -13,7 +13,7 @@ type CatImage = {
   url: string
 }
 
-const CAT_API_URL = 'https://api.thecatapi.com/v1/images/search'
+const CAT_API_URL = '/api/cat'
 
 const pick = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)]
 
