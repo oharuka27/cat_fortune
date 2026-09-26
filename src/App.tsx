@@ -1,132 +1,101 @@
-import { useEffect, useState } from 'react'
-import chatoraImage from './assets/cats/chatora.png'
-import kuroImage from './assets/cats/kuro.png'
-import mugigaraImage from './assets/cats/mugigara.png'
-import sabatoraImage from './assets/cats/sabatora.png'
-import shiroImage from './assets/cats/shiro.png'
-import shirokuroImage from './assets/cats/shirokuro.png'
+import { useState } from 'react'
+import quotes from './quotes.json'
 
-type Cat = {
-  name: string
-  title: string
-  image: string
-  color: string
-  message: string
-}
-
-type Fortune = {
-  label: string
-  icon: string
-  score: number
+type Quote = {
+  id: number
   text: string
+  author: string
+  profile: string
 }
 
-const cats: Cat[] = [
-  { name: 'むぎがら', title: '陽だまりの案内猫', image: mugigaraImage, color: '#8c603f', message: 'ゆっくりで大丈夫。今日は心地よい方を選ぶにゃ。' },
-  { name: 'しろ', title: '月夜のまねき猫', image: shiroImage, color: '#d8d1ca', message: '小さなひらめきが、うれしい出来事を連れてくるにゃ。' },
-  { name: 'さばとら', title: 'ご縁を結ぶ猫', image: sabatoraImage, color: '#8b8176', message: '素直なひと言が、誰かの心をあたためる日だにゃ。' },
-  { name: 'しろくろ', title: '元気を届ける猫', image: shirokuroImage, color: '#625d5b', message: 'まずは一歩。軽やかに動くほど運が味方するにゃ！' },
-  { name: 'くろ', title: '幸運を見抜く猫', image: kuroImage, color: '#49385c', message: 'いつもと違う道に、思いがけない幸運が隠れているにゃ。' },
-  { name: 'ちゃとら', title: '夢みる予言猫', image: chatoraImage, color: '#d78a45', message: '自分をたっぷり褒めると、運気がふわっと花開くにゃ。' },
-]
-
-const fortuneTexts = {
-  money: ['お財布を整えると臨時の幸運が。', '欲しかった物のお得な情報が届きそう。', '小さな節約が大きな満足につながる日。', '人への親切がめぐって返ってきそう。'],
-  love: ['笑顔のあいさつがご縁を近づけます。', '素直な気持ちを伝える絶好のタイミング。', '懐かしい人との会話にときめきの予感。', '自分らしさがいちばんの魅力になる日。'],
-  health: ['少し長めのストレッチで気分爽快。', '温かい飲み物が心と体を整えます。', '早めの休息で明日の元気をチャージ。', '好きな音楽に合わせて体を動かして。'],
+type CatImage = {
+  id: string
+  url: string
 }
+
+const CAT_API_URL = 'https://api.thecatapi.com/v1/images/search'
 
 const pick = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)]
-const score = () => Math.floor(Math.random() * 3) + 3
 
-function NyaText({ children }: { children: string }) {
-  return children.split(/(にゃ[。！]?)/).map((part, index) =>
-    part.startsWith('にゃ') ? <span className="no-break" key={index}>{part}</span> : part
-  )
-}
+async function fetchCatImage(): Promise<CatImage> {
+  const response = await fetch(CAT_API_URL)
+  if (!response.ok) throw new Error(`TheCatAPI responded ${response.status}`)
+  const [image] = (await response.json()) as CatImage[]
+  if (!image) throw new Error('TheCatAPI returned no image')
 
-function makeFortunes(): Fortune[] {
-  return [
-    { label: '金運', icon: '💰', score: score(), text: pick(fortuneTexts.money) },
-    { label: '恋愛運', icon: '💗', score: score(), text: pick(fortuneTexts.love) },
-    { label: '健康運', icon: '🍀', score: score(), text: pick(fortuneTexts.health) },
-  ]
+  // 画像を読み込み終えてから切り替え、表示のちらつきを防ぎます。
+  const preloadImage = new Image()
+  preloadImage.src = image.url
+  await preloadImage.decode().catch(() => {
+    // decode()非対応・失敗時も、imgタグ側で読み込みを継続します。
+  })
+  return image
 }
 
 function App() {
-  const [cat, setCat] = useState<Cat | null>(null)
-  const [fortunes, setFortunes] = useState<Fortune[]>([])
-  const [isAnimating, setIsAnimating] = useState(false)
+  const [cat, setCat] = useState<CatImage | null>(null)
+  const [quote, setQuote] = useState<Quote | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  useEffect(() => {
-    cats.forEach(({ image }) => {
-      const preloadImage = new Image()
-      preloadImage.src = image
-      void preloadImage.decode().catch(() => {
-        // decode()非対応時も、srcの指定による先読みは継続されます。
-      })
-    })
-  }, [])
-
-  const tellFortune = () => {
-    setIsAnimating(true)
-    window.setTimeout(() => {
-      const candidates = cat ? cats.filter((candidate) => candidate.name !== cat.name) : cats
-      setCat(pick(candidates))
-      setFortunes(makeFortunes())
-      setIsAnimating(false)
-    }, 450)
+  const drawToday = async () => {
+    setIsLoading(true)
+    setError('')
+    try {
+      const image = await fetchCatImage()
+      const candidates = quote ? quotes.filter((candidate) => candidate.id !== quote.id) : quotes
+      setCat(image)
+      setQuote(pick(candidates))
+    } catch {
+      setError('猫さまがお昼寝中のようです。少し待ってからもう一度お試しください。')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <main>
-      <div className="background-word" aria-hidden="true">FORTUNE</div>
+      <div className="background-word" aria-hidden="true">WISDOM</div>
       <header>
-        <span className="eyebrow">TODAY'S FELINE FORECAST</span>
-        <h1>猫さま<span>占い</span></h1>
-        <p>今日のあなたを導く猫さまは、どの子？</p>
+        <span className="eyebrow">TODAY'S CAT &amp; WORDS</span>
+        <h1>猫と<span>名言</span></h1>
+        <p>猫に癒されながら、偉人の言葉にふれるひととき</p>
       </header>
 
-      <section className={`fortune-card ${cat ? 'has-result' : ''} ${isAnimating ? 'shuffling' : ''}`} aria-live="polite">
-        {!cat ? (
+      <section className={`fortune-card ${cat ? 'has-result' : ''} ${isLoading ? 'shuffling' : ''}`} aria-live="polite">
+        {!cat || !quote ? (
           <div className="welcome">
             <div className="moon">☾<span>✦</span></div>
             <div className="cat-silhouette">🐈</div>
-            <h2>猫さまが待っています</h2>
-            <p><NyaText>心を落ち着けて、下のボタンを押してにゃ</NyaText></p>
+            <h2>本日の1枚を届けます</h2>
+            <p>下のボタンを押すと、猫の写真と名言がひとつ届きます</p>
           </div>
         ) : (
           <div className="result">
-            <div className="cat-panel" style={{ '--cat-color': cat.color } as React.CSSProperties}>
-              <span className="sparkle one">✦</span><span className="sparkle two">✧</span>
-              <img className="cat-image" src={cat.image} alt={`${cat.name}の横向きの猫`} />
-              <span className="chosen">本日の猫さま</span>
-              <h2>{cat.name}</h2>
-              <p>{cat.title}</p>
+            <div className="cat-panel">
+              <img className="cat-image" src={cat.url} alt="今日の猫の写真" />
             </div>
-            <div className="fortune-panel">
-              <div className="fortune-list">
-                {fortunes.map((fortune) => (
-                  <article key={fortune.label}>
-                    <div className="fortune-icon">{fortune.icon}</div>
-                    <div className="fortune-copy">
-                      <div className="fortune-heading"><h3>{fortune.label}</h3><div className="stars" aria-label={`5段階中${fortune.score}`}>{'★'.repeat(fortune.score)}<span>{'★'.repeat(5 - fortune.score)}</span></div></div>
-                      <p>{fortune.text}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-              <blockquote>「<NyaText>{cat.message}</NyaText>」</blockquote>
+            <div className="quote-panel">
+              <span className="chosen">本日のことば</span>
+              <blockquote>
+                <p>{quote.text}</p>
+                <footer>
+                  <cite>{quote.author}</cite>
+                  <span>{quote.profile}</span>
+                </footer>
+              </blockquote>
             </div>
           </div>
         )}
       </section>
 
-      <button className="fortune-button" onClick={tellFortune} disabled={isAnimating}>
-        <span>🐾</span>{cat ? 'もう一度占う' : '今日の運勢を占う'}<span>›</span>
+      {error && <p className="error" role="alert">{error}</p>}
+
+      <button className="fortune-button" onClick={drawToday} disabled={isLoading}>
+        <span>🐾</span>{isLoading ? '猫さまを呼んでいます…' : cat ? 'もう1枚' : '本日の1枚'}<span>›</span>
       </button>
-      <p className="note"><NyaText>何度でも占えるにゃ。ただし、猫さまの気分次第。</NyaText></p>
-      <footer><span>✦</span> MAY THE CATS BE WITH YOU <span>✦</span></footer>
+      <p className="note">写真は TheCatAPI から届きます。何度でも引き直せます</p>
+      <footer className="page-footer"><span>✦</span> MAY THE CATS BE WITH YOU <span>✦</span></footer>
     </main>
   )
 }
