@@ -32,6 +32,31 @@ async function fetchCatImage(): Promise<CatImage> {
   return image
 }
 
+function SleepingCat() {
+  return (
+    <svg className="illustration" viewBox="0 0 160 140" aria-hidden="true">
+      <path className="ground" d="M30 128H130" />
+      <path d="M56 50L58 18L74 30Q80 28 86 30L102 18L104 50A24 24 0 0 1 56 50Z" />
+      <path d="M62 72Q48 96 52 124H108Q112 96 98 72" />
+      <path d="M108 118Q138 116 134 92Q132 80 122 84" />
+      <path d="M68 52q4 3 8 0M84 52q4 3 8 0M78 60l2 2 2-2M72 124v-10M88 124v-10" />
+      <path className="zzz" d="M116 22h8l-8 9h8M130 8h6l-6 7h6" />
+    </svg>
+  )
+}
+
+function PawIcon() {
+  return (
+    <svg className="paw" viewBox="0 0 24 24" aria-hidden="true">
+      <ellipse cx="12" cy="16" rx="5" ry="4.2" />
+      <circle cx="5.5" cy="10" r="2.2" />
+      <circle cx="9.5" cy="6" r="2.2" />
+      <circle cx="14.5" cy="6" r="2.2" />
+      <circle cx="18.5" cy="10" r="2.2" />
+    </svg>
+  )
+}
+
 function App() {
   const [cat, setCat] = useState<CatImage | null>(null)
   const [quote, setQuote] = useState<Quote | null>(null)
@@ -47,56 +72,68 @@ function App() {
       setCat(image)
       setQuote(pick(candidates))
     } catch {
-      setError('猫さまがお昼寝中のようです。少し待ってからもう一度お試しください。')
+      setError('猫がお昼寝中のようです。少し待ってからもう一度お試しください。')
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <main>
-      <div className="background-word" aria-hidden="true">WISDOM</div>
-      <header>
-        <span className="eyebrow">TODAY'S CAT &amp; WORDS</span>
-        <h1>猫と<span>名言</span></h1>
-        <p>猫に癒されながら、偉人の言葉にふれるひととき</p>
+    <div className="page">
+      <header className="masthead">
+        <p className="label">Cat &amp; Words</p>
+        <h1>猫と名言</h1>
+        <p className="lead">猫に癒されながら、偉人の言葉にふれるひととき</p>
       </header>
 
-      <section className={`fortune-card ${cat ? 'has-result' : ''} ${isLoading ? 'shuffling' : ''}`} aria-live="polite">
-        {!cat || !quote ? (
-          <div className="welcome">
-            <div className="moon">☾<span>✦</span></div>
-            <div className="cat-silhouette">🐈</div>
-            <h2>本日の1枚を届けます</h2>
-            <p>下のボタンを押すと、猫の写真と名言がひとつ届きます</p>
-          </div>
-        ) : (
-          <div className="result">
-            <div className="cat-panel">
-              <img className="cat-image" src={cat.url} alt="今日の猫の写真" />
-            </div>
-            <div className="quote-panel">
-              <span className="chosen">本日のことば</span>
-              <blockquote>
+      <main>
+        <article className="card" aria-live="polite" aria-busy={isLoading}>
+          <figure className={`photo ${isLoading ? 'is-loading' : ''}`}>
+            {cat ? (
+              <img key={cat.id} src={cat.url} alt="TheCatAPI から届いた猫の写真" />
+            ) : (
+              <div className="placeholder"><SleepingCat /></div>
+            )}
+          </figure>
+
+          <div className="words">
+            <p className="label">本日のことば</p>
+            {quote ? (
+              <blockquote key={quote.id}>
                 <p>{quote.text}</p>
                 <footer>
                   <cite>{quote.author}</cite>
                   <span>{quote.profile}</span>
                 </footer>
               </blockquote>
-            </div>
+            ) : (
+              <div className="intro">
+                <h2>今日の1枚を届けます</h2>
+                <p>ボタンを押すと、猫の写真と偉人の名言がひとつずつ届きます。何度でも引き直せます。</p>
+              </div>
+            )}
           </div>
-        )}
-      </section>
+        </article>
 
-      {error && <p className="error" role="alert">{error}</p>}
+        <div className="actions">
+          <button className="draw-button" onClick={drawToday} disabled={isLoading}>
+            <PawIcon />
+            {isLoading ? '猫を呼んでいます…' : cat ? 'もう1枚' : '本日の1枚'}
+          </button>
+          {error && <p className="error" role="alert">{error}</p>}
+        </div>
+      </main>
 
-      <button className="fortune-button" onClick={drawToday} disabled={isLoading}>
-        <span>🐾</span>{isLoading ? '猫さまを呼んでいます…' : cat ? 'もう1枚' : '本日の1枚'}<span>›</span>
-      </button>
-      <p className="note">写真は TheCatAPI から届きます。何度でも引き直せます</p>
-      <footer className="page-footer"><span>✦</span> MAY THE CATS BE WITH YOU <span>✦</span></footer>
-    </main>
+      <footer className="credits">
+        <p>
+          写真 <a href="https://thecatapi.com/" target="_blank" rel="noreferrer">TheCatAPI</a>
+          <span aria-hidden="true"> ・ </span>
+          名言出典 <a href="https://tomo8language.com/quotes-list/" target="_blank" rel="noreferrer">tomo8language.com</a>
+          {' / '}
+          <a href="https://iyashitour.com/meigen/greatman" target="_blank" rel="noreferrer">iyashitour.com</a>
+        </p>
+      </footer>
+    </div>
   )
 }
 
