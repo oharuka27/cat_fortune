@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import quotes from './quotes.json'
 
 type Quote = {
   id: number
@@ -13,23 +12,30 @@ type CatImage = {
   url: string
 }
 
+type CatFortune = {
+  image: CatImage
+  quote: Quote
+  cached: boolean
+}
+
 const CAT_API_URL = '/api/cat'
 
-const pick = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)]
-
-async function fetchCatImage(): Promise<CatImage> {
-  const response = await fetch(CAT_API_URL)
-  if (!response.ok) throw new Error(`TheCatAPI responded ${response.status}`)
-  const [image] = (await response.json()) as CatImage[]
-  if (!image) throw new Error('TheCatAPI returned no image')
+async function fetchCatFortune(previous: CatFortune | null): Promise<CatFortune> {
+  // 前回と同じ組み合わせが続かないよう、表示中の画像と名言をバックエンドに伝えます。
+  const params = previous
+    ? `?${new URLSearchParams({ previousImage: previous.image.id, previousQuote: String(previous.quote.id) })}`
+    : ''
+  const response = await fetch(`${CAT_API_URL}${params}`)
+  if (!response.ok) throw new Error(`/api/cat responded ${response.status}`)
+  const fortune = (await response.json()) as CatFortune
 
   // 画像を読み込み終えてから切り替え、表示のちらつきを防ぎます。
   const preloadImage = new Image()
-  preloadImage.src = image.url
+  preloadImage.src = fortune.image.url
   await preloadImage.decode().catch(() => {
     // decode()非対応・失敗時も、imgタグ側で読み込みを継続します。
   })
-  return image
+  return fortune
 }
 
 function SleepingCat() {
@@ -58,8 +64,7 @@ function PawIcon() {
 }
 
 function App() {
-  const [cat, setCat] = useState<CatImage | null>(null)
-  const [quote, setQuote] = useState<Quote | null>(null)
+  const [fortune, setFortune] = useState<CatFortune | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -67,16 +72,16 @@ function App() {
     setIsLoading(true)
     setError('')
     try {
-      const image = await fetchCatImage()
-      const candidates = quote ? quotes.filter((candidate) => candidate.id !== quote.id) : quotes
-      setCat(image)
-      setQuote(pick(candidates))
+      setFortune(await fetchCatFortune(fortune))
     } catch {
       setError('猫がお昼寝中のようです。少し待ってからもう一度お試しください。')
     } finally {
       setIsLoading(false)
     }
   }
+
+  const cat = fortune?.image
+  const quote = fortune?.quote
 
   return (
     <div className="page">
@@ -120,6 +125,7 @@ function App() {
             <PawIcon />
             {isLoading ? '猫を呼んでいます…' : cat ? 'もう1枚' : '本日の1枚'}
           </button>
+          <p className="limit-note">新しい学びは1分間に10個までだよ</p>
           {error && <p className="error" role="alert">{error}</p>}
         </div>
       </main>

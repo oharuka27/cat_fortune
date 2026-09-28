@@ -179,6 +179,7 @@ blockquote footer span { color: var(--ink-muted); }
 .draw-button:disabled { cursor: progress; opacity: .75; transform: none; }
 .paw { width: 20px; height: 20px; fill: currentColor; }
 .draw-button:disabled .paw { animation: bounce .8s ease-in-out infinite alternate; }
+.limit-note { color: var(--ink-muted); opacity: .8; letter-spacing: .04em; }
 .error { color: var(--accent-strong); text-align: center; }
 
 /* フッター */

@@ -9,6 +9,15 @@
     "run_worker_first": ["/api/*"],
     "not_found_handling": "single-page-application"
   },
+  // TheCatAPI の利用回数（全員で1分間に10回まで）と取得結果のキャッシュ
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "cat-fortune-db",
+      "database_id": "2765eb7d-e69c-4699-9dee-e1e20313da56",
+      "migrations_dir": "migrations"
+    }
+  ],
   // /api/cat は1つのIPにつき60秒あたり30回まで
   "ratelimits": [
     {
